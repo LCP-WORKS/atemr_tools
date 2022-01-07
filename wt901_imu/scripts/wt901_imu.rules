@@ -1,0 +1,4 @@
+# set the udev rule , make the device_port be fixed by wt901IMU
+#
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", MODE:="0777", SYMLINK+="wt901IMU"
+

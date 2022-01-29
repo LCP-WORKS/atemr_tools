@@ -1,0 +1,84 @@
+Engine: Reactive-Obstacle Avoidance
+InputVariable: FR
+  description: front-right
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: FC
+  description: front-center
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: FL
+  description: front-left
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: RL
+  description: rear-left
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: RC
+  description: rear-center
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: RR
+  description: rear-right
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+OutputVariable: angularSteering
+  description: Angular velocity control
+  enabled: true
+  range: -1.000 1.000
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: WeightedAverage Automatic
+  default: 0.000
+  lock-previous: false
+  term: RIGHT Ramp 0.000 -1.000
+  term: LEFT Ramp 0.000 1.000
+OutputVariable: linearSteering
+  enabled: true
+  range: -1.000 1.000
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: WeightedAverage Automatic
+  default: 0.000
+  lock-previous: false
+  term: RETREAT Ramp 0.000 -1.000
+  term: ADVANCE Ramp 0.000 1.000
+RuleBlock: IDLE-Preservation Rules (mamdani)
+  description: These rules are applied when the robot is not moving
+  enabled: true
+  conjunction: AlgebraicProduct
+  disjunction: AlgebraicSum
+  implication: AlgebraicProduct
+  activation: General
+  rule: if FC is NEAR and FL is NEAR and FR is NEAR and RC is FAR then linearSteering is RETREAT
+  rule: if FC is NEAR and RC is FAR then linearSteering is RETREAT
+  rule: if FC is FAR and RC is NEAR then linearSteering is ADVANCE
+  rule: if FC is FAR and RC is NEAR and RL is NEAR and RR is NEAR then linearSteering is ADVANCE
+  rule: if FR is NEAR and FL is FAR then angularSteering is LEFT
+  rule: if FL is NEAR and FR is FAR then angularSteering is RIGHT
+  rule: if FR is NEAR and FL is NEAR then linearSteering is RETREAT
+  rule: if RR is NEAR and RL is FAR then angularSteering is LEFT
+  rule: if RL is NEAR and RR is FAR then angularSteering is RIGHT
+  rule: if RR is NEAR and RL is NEAR then linearSteering is ADVANCE
+  rule: if FC is NEAR and RC is NEAR and FR is FAR and RR is FAR and RL is somewhat FAR then angularSteering is RIGHT with 0.5
+  rule: if FC is NEAR and RC is NEAR and FL is FAR and RL is FAR and RR is somewhat FAR then angularSteering is LEFT with 0.5
+  rule: if FC is extremely NEAR and RC is extremely NEAR and FR is FAR then angularSteering is RIGHT with 0.5

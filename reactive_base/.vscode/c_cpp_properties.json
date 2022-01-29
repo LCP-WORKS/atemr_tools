@@ -1,0 +1,39 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/ephson/atemr_ws/devel/include/**",
+        "/home/ephson/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/ephson/colcon_ws/install/turtlesim/include/**",
+        "/home/ephson/colcon_ws/install/cpp_pubsub/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_dbus/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_hardware/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_localization/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_nav/include/**",
+        "/home/ephson/catkin_ws/src/camara/include/**",
+        "/home/ephson/catkin_ws/src/tutorials/controller_pkg/include/**",
+        "/home/ephson/catkin_ws/src/hoverboard_src/hoverboard-driver/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/map_server/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/reactive_base/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/realsense-ros/realsense2_camera/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/development/rviz_camera_stream/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/scan_processor/include/**",
+        "/home/ephson/catkin_ws/src/sicktoolbox/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/web_video_server/include/**",
+        "/home/ephson/atemr_ws/src/atemr_src/atemr_tools/wt901_imu/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

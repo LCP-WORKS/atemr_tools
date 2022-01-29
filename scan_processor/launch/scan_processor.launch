@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="scan_processor" type="sp_node" name="scan_processor_node" output="screen">
+    <remap from="scan" to="scan_filtered"/>
+    <param name="pattern_type" value="1" /> <!-- HEXAGONAL = 0: HEXAGONAL_90 = 1: OCTAGONAL = 2 (not implemented)-->
+    <param name="obstacle_radius" value="0.03" /> <!-- metres(m) @ 1.5m-->
+  </node>
+</launch>

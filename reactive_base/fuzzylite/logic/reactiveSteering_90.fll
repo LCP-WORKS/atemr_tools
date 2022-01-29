@@ -1,0 +1,86 @@
+Engine: Reactive-Steering-90
+description: IDLE Reactive Obstacle Avoidance using HEX-90-PATTERN
+InputVariable: FR
+  description: FrontRight
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+InputVariable: FL
+  description: FrontLeft
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+InputVariable: RL
+  description: RearLeft
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+InputVariable: RR
+  description: RearRight
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+InputVariable: LC
+  description: LeftCenter
+  enabled: false
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+InputVariable: RC
+  description: RightCenter
+  enabled: false
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.150 0.900
+  term: FAR SShape 0.250 1.000
+OutputVariable: angSteer
+  description: Turn Velocity of the robot base
+  enabled: true
+  range: -1.500 1.500
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: Centroid 200
+  default: 0.000
+  lock-previous: false
+  term: RIGHT Ramp -0.050 -1.500
+  term: LEFT Ramp 0.050 1.500
+OutputVariable: linSteer
+  description: Linear velocity of the robot base
+  enabled: true
+  range: -0.700 0.700
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: Centroid 200
+  default: 0.000
+  lock-previous: false
+  term: RETREAT Ramp -0.050 -1.000
+  term: ADVANCE Ramp 0.050 1.000
+RuleBlock: 
+  enabled: true
+  conjunction: AlgebraicProduct
+  disjunction: AlgebraicSum
+  implication: AlgebraicProduct
+  activation: General
+  rule: if FR is FAR and FL is FAR and RL is NEAR and RR is NEAR then linSteer is ADVANCE
+  rule: if FR is NEAR and FL is NEAR and RL is FAR and RR is FAR then linSteer is RETREAT
+  rule: if FR is NEAR and FL is FAR and RL is FAR and RR is NEAR then angSteer is LEFT
+  rule: if FR is FAR and FL is NEAR and RL is NEAR and RR is FAR then angSteer is RIGHT
+  rule: if FR is NEAR and FL is FAR and RL is NEAR and RR is FAR then angSteer is LEFT with 0.65
+  rule: if FR is FAR and FL is NEAR and RL is FAR and RR is NEAR then angSteer is RIGHT with 0.65
+  rule: if FR is NEAR and FL is NEAR and RL is NEAR and RR is FAR then angSteer is RIGHT with 0.3
+  rule: if FR is NEAR and FL is NEAR and RL is FAR and RR is NEAR then angSteer is LEFT with 0.3
+  rule: if FR is NEAR and FL is FAR and RL is NEAR and RR is NEAR then angSteer is LEFT with 0.3
+  rule: if FR is FAR and FL is NEAR and RL is NEAR and RR is NEAR then angSteer is RIGHT with 0.3
+  rule: if FR is FAR and FL is FAR and RL is NEAR and RR is FAR then angSteer is RIGHT and linSteer is ADVANCE with 0.65
+  rule: if FR is FAR and FL is FAR and RL is FAR and RR is NEAR then angSteer is LEFT and linSteer is ADVANCE with 0.65
+  rule: if FR is NEAR and FL is FAR and RL is FAR and RR is FAR then angSteer is LEFT and linSteer is RETREAT with 0.65
+  rule: if FR is FAR and FL is NEAR and RL is FAR and RR is FAR then angSteer is RIGHT and linSteer is RETREAT with 0.65

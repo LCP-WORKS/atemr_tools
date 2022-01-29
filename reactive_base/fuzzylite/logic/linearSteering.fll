@@ -1,0 +1,35 @@
+Engine: 
+InputVariable: FrontObstacle
+  description: Data from Hex pattern
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+InputVariable: RearObstacle
+  description: Data from HEX pattern
+  enabled: true
+  range: 0.000 1.000
+  lock-range: true
+  term: NEAR ZShape 0.000 1.000
+  term: FAR SShape 0.000 1.000
+OutputVariable: linearSteer
+  description: Linear Velocity Control
+  enabled: true
+  range: -1.000 1.000
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: WeightedAverage Automatic
+  default: 0.000
+  lock-previous: false
+  term: REVERSE Ramp 0.000 -1.000
+  term: FORWARD Ramp 0.000 1.000
+RuleBlock: Straight-Steering
+  description: Reacts to obstacles in the rear and front
+  enabled: true
+  conjunction: AlgebraicProduct
+  disjunction: AlgebraicSum
+  implication: AlgebraicProduct
+  activation: General
+  rule: if FrontObstacle is NEAR and RearObstacle is FAR then linearSteer is REVERSE
+  rule: if FrontObstacle is FAR and RearObstacle is NEAR then linearSteer is FORWARD

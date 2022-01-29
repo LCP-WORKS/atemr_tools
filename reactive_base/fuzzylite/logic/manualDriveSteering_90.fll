@@ -1,0 +1,84 @@
+Engine: Manual-Steering-90
+description: Driving Obstacle Avoidance using HEX-90-PATTERN
+InputVariable: FR
+  description: FrontRight
+  enabled: true
+  range: 0.000 1.200
+  lock-range: false
+  term: NEAR ZShape 0.300 1.000
+  term: FAR SShape 0.300 1.200
+InputVariable: FL
+  description: FrontLeft
+  enabled: true
+  range: 0.000 1.200
+  lock-range: false
+  term: NEAR ZShape 0.300 1.000
+  term: FAR SShape 0.300 1.200
+InputVariable: RL
+  description: RearLeft
+  enabled: true
+  range: 0.000 1.200
+  lock-range: false
+  term: NEAR ZShape 0.300 1.000
+  term: FAR SShape 0.300 1.200
+InputVariable: RR
+  description: RearRight
+  enabled: true
+  range: 0.000 1.200
+  lock-range: false
+  term: NEAR ZShape 0.300 1.000
+  term: FAR SShape 0.300 1.200
+InputVariable: LC
+  description: LeftCenter
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.250 0.900
+  term: FAR SShape 0.300 1.000
+InputVariable: RC
+  description: RightCenter
+  enabled: true
+  range: 0.000 1.000
+  lock-range: false
+  term: NEAR ZShape 0.250 0.900
+  term: FAR SShape 0.300 1.000
+OutputVariable: angSteerFWD
+  description: Turn Velocity of the robot base when advancing forward
+  enabled: true
+  range: -1.500 1.500
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: WeightedAverage Automatic
+  default: 0.000
+  lock-previous: false
+  term: RIGHT Ramp -0.050 -1.500
+  term: LEFT Ramp 0.050 1.500
+OutputVariable: angSteerBKWD
+  description: Turn Velocity of the robot base when reveersing
+  enabled: true
+  range: -1.500 1.500
+  lock-range: true
+  aggregation: Maximum
+  defuzzifier: WeightedAverage Automatic
+  default: 0.000
+  lock-previous: false
+  term: RIGHT Ramp -0.050 -1.500
+  term: LEFT Ramp 0.050 1.500
+RuleBlock: 
+  enabled: true
+  conjunction: AlgebraicProduct
+  disjunction: AlgebraicSum
+  implication: AlgebraicProduct
+  activation: General
+  rule: if FR is NEAR and FL is FAR then angSteerFWD is LEFT with 1.0
+  rule: if FL is NEAR and FR is FAR then angSteerFWD is RIGHT with 1.0
+  rule: if RC is NEAR and LC is FAR then angSteerFWD is LEFT with 0.85
+  rule: if RC is FAR and LC is NEAR then angSteerFWD is RIGHT with 0.85
+  rule: if FL is very NEAR and FR is somewhat NEAR then angSteerFWD is RIGHT with 0.8
+  rule: if FR is very NEAR and FL is somewhat NEAR then angSteerFWD is LEFT with 0.8
+  rule: if RR is NEAR and RL is FAR then angSteerBKWD is RIGHT with 1.0
+  rule: if RL is NEAR and RR is FAR then angSteerBKWD is LEFT with 1.0
+  rule: if RC is NEAR and LC is FAR then angSteerBKWD is RIGHT with 0.85
+  rule: if RC is FAR and LC is NEAR then angSteerBKWD is LEFT with 0.85
+  rule: if RL is very NEAR and RR is somewhat NEAR then angSteerBKWD is LEFT with 0.8
+  rule: if RR is very NEAR and RL is somewhat NEAR then angSteerBKWD is RIGHT with 0.8

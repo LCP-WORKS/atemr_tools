@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="reactive_base" type="reactive_base_node" name="reactive_base_node" output="screen">
+    <param name="react_percent" value="0.7" />
+    <param name="obstacle_stop_distance" value="0.25" />
+    <param name="idle_transition_time" value="8" />
+    <param name="max_linear_vel" value="0.26" />
+  </node>
+</launch>

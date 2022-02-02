@@ -197,6 +197,7 @@ int main(int argc, char * argv[]) {
     bool angle_compensate = true;
     bool rotate_scan;
     float max_distance = 8.0;
+    double frequency = 20.0;
     int angle_compensate_multiple = 1;//it stand of angle compensate at per 1 degree
     std::string scan_mode;
     ros::NodeHandle nh;
@@ -212,6 +213,7 @@ int main(int argc, char * argv[]) {
     nh_private.param<bool>("angle_compensate", angle_compensate, false);
     nh_private.param<std::string>("scan_mode", scan_mode, std::string());
     nh_private.param<bool>("rotate_scan", rotate_scan, false);
+    nh_private.param<double>("publish_frequency", frequency, 20);
 
     ROS_INFO("RPLIDAR running on ROS package rplidar_ros. SDK Version:" RPLIDAR_SDK_VERSION"");
 
@@ -313,6 +315,7 @@ int main(int argc, char * argv[]) {
     ros::Time start_scan_time;
     ros::Time end_scan_time;
     double scan_duration;
+    ros::Rate r(frequency);
     while (ros::ok()) {
         rplidar_response_measurement_node_hq_t nodes[360*8];
         size_t   count = _countof(nodes);
@@ -387,7 +390,7 @@ int main(int argc, char * argv[]) {
                              frame_id);
             }
         }
-
+        r.sleep();
         ros::spinOnce();
     }
 

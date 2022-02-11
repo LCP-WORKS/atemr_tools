@@ -22,6 +22,9 @@ class WT901IMU:
         self.imu_msg = Imu()
         self.imu_msg.header.frame_id = "wt901_imu"
         self.pub = publisher
+
+    def close(self):
+        self.ser.close()
     
     def execute(self):
         data = self.ser.read(11)
@@ -62,3 +65,5 @@ if __name__ == '__main__':
     while(not rospy.is_shutdown()):
         imu_device.execute()
         r.sleep()
+    imu_device.close()
+    

@@ -18,7 +18,7 @@ class WT901IMU:
         self.acc_conv = self.constant * 16.0
         self.ang_vel_conv = self.constant * 2000.0
         self.euler_conv = self.constant * 180.0
-        self.ser = serial.Serial('/dev/wt901IMU')
+        self.ser = serial.Serial('/dev/wt901IMU', 115200)
         self.imu_msg = Imu()
         self.imu_msg.header.frame_id = "wt901_imu"
         self.pub = publisher
@@ -28,20 +28,24 @@ class WT901IMU:
         self.imu_msg.header.stamp = rospy.Time.now()
         #print(IMUData.ACCELERATION.value)
         if (data[1] == IMUData.ACCELERATION.value):
-            x, y, z = [val / self.acc_conv for val in struct.unpack('<hhh', data[2:8])]
+            axes = struct.unpack("<hhh", data[2:8])
+            x, y, z = [val / self.acc_conv for val in axes]
             self.imu_msg.linear_acceleration.x = y
             self.imu_msg.linear_acceleration.y = x
             self.imu_msg.linear_acceleration.z = -z
         elif (data[1] == IMUData.ANGULAR_VEL.value):
-            x, y, z = [val / self.ang_vel_conv for val in struct.unpack('<hhh', data[2:8])]
+            axes = struct.unpack("<hhh", data[2:8])
+            x, y, z = [val / self.ang_vel_conv for val in axes]
             self.imu_msg.angular_velocity.x = y
             self.imu_msg.angular_velocity.y = x
             self.imu_msg.angular_velocity.z = -z
         elif (data[1] == IMUData.EULER.value):
-            x, y, z = [val / self.ang_vel_conv for val in struct.unpack('<hhh', data[2:8])]
+            axes = struct.unpack("<hhh", data[2:8])
+            x, y, z = [val / self.ang_vel_conv for val in axes]
             print('x: %f y: %f z: %f' % (x, y, z))
         elif (data[1] == IMUData.QUATERNION.value):
-            x, y, z = [val / self.ang_vel_conv for val in struct.unpack('<hhh', data[2:8])]
+            axes = struct.unpack("<hhh", data[2:8])
+            x, y, z = [val / self.ang_vel_conv for val in axes]
             self.imu_msg.angular_velocity.x = y
             self.imu_msg.angular_velocity.y = x
             self.imu_msg.angular_velocity.z = -z

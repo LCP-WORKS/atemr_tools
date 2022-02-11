@@ -13,7 +13,7 @@ class IMUData(Enum):
     QUATERNION = 0x59
 
 class WT901IMU:
-    def __init__(self) -> None:
+    def __init__(self, publisher) -> None:
         self.constant = 32768.0
         self.acc_conv = self.constant * 16.0
         self.ang_vel_conv = self.constant * 2000.0
@@ -21,6 +21,7 @@ class WT901IMU:
         self.ser = serial.Serial('/dev/wt901IMU')
         self.imu_msg = Imu()
         self.imu_msg.header.frame_id = "wt901_imu"
+        self.pub = publisher
     
     def execute(self):
         data = self.ser.read(11)
@@ -44,16 +45,15 @@ class WT901IMU:
             self.imu_msg.angular_velocity.y = x
             self.imu_msg.angular_velocity.z = -z
         
+        self.pub.publish(self.imu_msg)
+        
 
 if __name__ == '__main__':
-    imu_device = WT901IMU()
     rospy.init_node('wt901_node', anonymous=False)
     pub = rospy.Publisher('imu/data_raw', Imu, latch=False, queue_size=5)
-    msg = Imu()
-    msg.header.frame_id = "wt901_imu"
+    imu_device = WT901IMU(publisher=pub)
     r = rospy.Rate(50) # 50hz
-
-    while(not rospy.is_shutdown):
+    rospy.loginfo('Starting IMU node ...')
+    while(not rospy.is_shutdown()):
         imu_device.execute()
-        pub.publish(imu_device.imu_msg)
         r.sleep()

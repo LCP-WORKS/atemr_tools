@@ -24,7 +24,7 @@ class WT901IMU:
         self.pub = publisher
     
     def execute(self):
-        data = self.ser.read(44)
+        data = self.ser.read(11)
         self.imu_msg.header.stamp = rospy.Time.now()
         #print(IMUData.ACCELERATION.value)
         if (data[1] == IMUData.ACCELERATION.value):

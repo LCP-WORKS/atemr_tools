@@ -34,6 +34,7 @@ class WitRos {
    ** Variables
    **********************/
   string name_;
+  bool use_enu_;
   WitDriver wd_;
 
   /*********************

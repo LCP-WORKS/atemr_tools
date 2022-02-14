@@ -30,6 +30,8 @@ bool WitRos::init(NodeHandle &nh) {
     return false;
   }
 
+  nh.param<bool>("use_enu", use_enu_, false);
+
   /*********************
    ** Driver Init
    **********************/
@@ -96,16 +98,34 @@ void WitRos::processStreamData() {
     gps_msg.header.stamp = ros::Time::now();
     raw_msg.header.stamp = ros::Time::now();
     Data::IMUGPS data = wd_.getData();
-    imu_msg.angular_velocity.x = data.w[0];
-    imu_msg.angular_velocity.y = data.w[1];
-    imu_msg.angular_velocity.z = data.w[2];
+    if(!use_enu_)
+    {
+      imu_msg.angular_velocity.x = data.w[0];
+      imu_msg.angular_velocity.y = data.w[1];
+      imu_msg.angular_velocity.z = data.w[2];
 
-    imu_msg.linear_acceleration.x = data.a[0];
-    imu_msg.linear_acceleration.y = data.a[1];
-    imu_msg.linear_acceleration.z = data.a[2];
+      imu_msg.linear_acceleration.x = data.a[0];
+      imu_msg.linear_acceleration.y = data.a[1];
+      imu_msg.linear_acceleration.z = data.a[2];
 
-    imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-        data.rpy[0], data.rpy[1], data.rpy[2]);
+      imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+          data.rpy[0], data.rpy[1], data.rpy[2]);
+    }
+    else
+    {
+      imu_msg.angular_velocity.x = data.w[1];
+      imu_msg.angular_velocity.y = data.w[0];
+      imu_msg.angular_velocity.z = -data.w[2];
+
+      imu_msg.linear_acceleration.x = data.a[1];
+      imu_msg.linear_acceleration.y = data.a[0];
+      imu_msg.linear_acceleration.z = -data.a[2];
+
+      imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+          data.rpy[1], data.rpy[0], -data.rpy[2]);
+    }
+
+
 
     imu_msg.orientation_covariance =
     {0.001, 0.0,    0.0,

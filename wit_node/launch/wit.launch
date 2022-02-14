@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="port"                  default = "/dev/wt901IMU" />
+  <arg name="use_enu"                  default = "true" />
   <node pkg="nodelet" type="nodelet" output="screen" name="wit_nodelet_manager" args="manager"/>
   <node pkg="nodelet" type="nodelet" output="screen" name="wit" args="load wit_node/WitNodelet wit_nodelet_manager" >
     <param name="port" value="$(arg port)" />
+    <param name="use_enu" value="$(arg use_enu)" />
   </node>
 </launch>

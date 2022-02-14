@@ -122,7 +122,7 @@ void WitRos::processStreamData() {
       imu_msg.linear_acceleration.z = -data.a[2];
 
       imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-          data.rpy[1], data.rpy[0], -data.rpy[2]);
+          -data.rpy[1], -data.rpy[0], data.rpy[2]);
     }
 
 
@@ -146,9 +146,34 @@ void WitRos::processStreamData() {
     gps_msg.position_covariance_type =
         sensor_msgs::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
     for (int i = 0; i < 3; i++) {
-      raw_msg.acc.push_back(data.a[i]);
-      raw_msg.gyro.push_back(data.w[i]);
-      raw_msg.rpy.push_back(data.rpy[i]);
+      if(!use_enu_)
+      {
+        raw_msg.acc.push_back(data.a[i]);
+        raw_msg.gyro.push_back(data.w[i]);
+        raw_msg.rpy.push_back(data.rpy[i]);
+      }
+      else
+      {
+        if(i == 0)
+        {
+          raw_msg.acc.push_back(data.a[i+1]);
+          raw_msg.gyro.push_back(data.w[i+1]);
+          raw_msg.rpy.push_back(-data.rpy[i+1]);
+        }
+        if(i == 1)
+        {
+          raw_msg.acc.push_back(data.a[i-1]);
+          raw_msg.gyro.push_back(data.w[i-1]);
+          raw_msg.rpy.push_back(-data.rpy[i-1]);
+        }
+        if(i == 2)
+        {
+          raw_msg.acc.push_back(-data.a[i]);
+          raw_msg.gyro.push_back(-data.w[i]);
+          raw_msg.rpy.push_back(data.rpy[i]);
+        }
+
+      }
       raw_msg.mag.push_back(data.mag[i]);
       raw_msg.dop.push_back(data.gpsa[i]);
     }

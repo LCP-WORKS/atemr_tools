@@ -113,11 +113,11 @@ void WitRos::processStreamData() {
     }
     else
     {
-      imu_msg.angular_velocity.x = data.w[1];
+      imu_msg.angular_velocity.x = -data.w[1];
       imu_msg.angular_velocity.y = data.w[0];
       imu_msg.angular_velocity.z = -data.w[2];
 
-      imu_msg.linear_acceleration.x = data.a[1];
+      imu_msg.linear_acceleration.x = -data.a[1];
       imu_msg.linear_acceleration.y = data.a[0];
       imu_msg.linear_acceleration.z = -data.a[2];
 
@@ -156,8 +156,8 @@ void WitRos::processStreamData() {
       {
         if(i == 0)
         {
-          raw_msg.acc.push_back(data.a[i+1]);
-          raw_msg.gyro.push_back(data.w[i+1]);
+          raw_msg.acc.push_back(-data.a[i+1]);
+          raw_msg.gyro.push_back(-data.w[i+1]);
           raw_msg.rpy.push_back(-data.rpy[i+1]);
         }
         if(i == 1)

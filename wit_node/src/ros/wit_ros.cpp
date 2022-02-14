@@ -91,7 +91,7 @@ void WitRos::processStreamData() {
     sensor_msgs::NavSatFix gps_msg;
     wit_node::ImuGpsRaw raw_msg;
     std_msgs::Float64 yaw_msg;
-    imu_msg.header.frame_id = "imu_link";
+    imu_msg.header.frame_id = "wt901_imu";
     imu_msg.header.stamp = ros::Time::now();
     gps_msg.header.stamp = ros::Time::now();
     raw_msg.header.stamp = ros::Time::now();

@@ -16,6 +16,7 @@
 #include <ecl/threads.hpp>
 #include <fstream>
 #include <iostream>
+#include <geometry_msgs/Twist.h>
 #include "wit_driver.hpp"
 
 using namespace std;
@@ -34,7 +35,7 @@ class WitRos {
    ** Variables
    **********************/
   string name_;
-  bool use_enu_;
+  bool use_enu_, is_moving_;
   double acc_offset_x_, acc_offset_y_, roll_offset_, pitch_offset_;
   WitDriver wd_;
 
@@ -50,10 +51,11 @@ class WitRos {
   /*********************
    ** Ros Subscribers
    **********************/
-  Subscriber reset_offset_sub_;
+  Subscriber reset_offset_sub_, cmd_vel_sub_;
   void subscribeTopics(NodeHandle &nh);
 
   void subscribeResetOffset(const std_msgs::Empty msg);
+  void subscribeCmdVel(const geometry_msgs::Twist msg);
 
   /*********************
    ** SigSlots

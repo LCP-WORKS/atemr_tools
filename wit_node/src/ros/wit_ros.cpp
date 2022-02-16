@@ -87,8 +87,8 @@ void WitRos::advertiseTopics(NodeHandle &nh) {
 void WitRos::subscribeTopics(NodeHandle &nh) {
   reset_offset_sub_ = nh.subscribe(string("reset_offset"), 10,
                                    &WitRos::subscribeResetOffset, this);
-  cmd_vel_sub_ = nh.subscribe("base_controller/cmd_vel", 3,
-                              &WitRos::subscribeResetOffset, this);
+  cmd_vel_sub_ = nh.subscribe("/base_controller/cmd_vel", 3,
+                              &WitRos::subscribeCmdVel, this);
 }
 void WitRos::subscribeResetOffset(const std_msgs::Empty msg) {
   wd_.resetYawOffset();

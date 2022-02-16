@@ -31,6 +31,10 @@ bool WitRos::init(NodeHandle &nh) {
   }
 
   nh.param<bool>("use_enu", use_enu_, false);
+  acc_offset_x_ = 0.0478515625;
+  acc_offset_y_ = -0.21533203125000003;
+  roll_offset_ = 0.027419906115722658;
+  pitch_offset_ = 0.006998787225341797;
 
   /*********************
    ** Driver Init
@@ -117,20 +121,20 @@ void WitRos::processStreamData() {
       imu_msg.angular_velocity.y = -data.w[0];
       imu_msg.angular_velocity.z = data.w[2];
 
-      imu_msg.linear_acceleration.x = -data.a[1];
-      imu_msg.linear_acceleration.y = -data.a[0];
+      imu_msg.linear_acceleration.x = -data.a[1] + acc_offset_x_;
+      imu_msg.linear_acceleration.y = -data.a[0] + acc_offset_y_;
       imu_msg.linear_acceleration.z = data.a[2];
 
       imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-          -data.rpy[1], -data.rpy[0], data.rpy[2]);
+          (-data.rpy[1] + roll_offset_), (-data.rpy[0] + pitch_offset_), data.rpy[2]);
     }
 
 
 
     imu_msg.orientation_covariance =
-    {0.001, 0.0,    0.0,
+    {0.01, 0.0,    0.0,
      0.0,   0.001,  0.0,
-     0.0,   0.0,    0.001};
+     0.0,   0.0,    0.01};
     imu_msg.angular_velocity_covariance =
     {0.00001, 0.0,      0.0,
      0.0,     0.00001,  0.0,
@@ -156,15 +160,15 @@ void WitRos::processStreamData() {
       {
         if(i == 0)
         {
-          raw_msg.acc.push_back(-data.a[i+1]);
+          raw_msg.acc.push_back(-data.a[i+1] + acc_offset_x_);
           raw_msg.gyro.push_back(-data.w[i+1]);
-          raw_msg.rpy.push_back(-data.rpy[i+1]);
+          raw_msg.rpy.push_back(-data.rpy[i+1] + roll_offset_);
         }
         if(i == 1)
         {
-          raw_msg.acc.push_back(-data.a[i-1]);
+          raw_msg.acc.push_back(-data.a[i-1] + acc_offset_y_);
           raw_msg.gyro.push_back(-data.w[i-1]);
-          raw_msg.rpy.push_back(-data.rpy[i-1]);
+          raw_msg.rpy.push_back(-data.rpy[i-1] + pitch_offset_);
         }
         if(i == 2)
         {

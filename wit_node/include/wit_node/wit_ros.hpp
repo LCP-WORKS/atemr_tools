@@ -35,6 +35,7 @@ class WitRos {
    **********************/
   string name_;
   bool use_enu_;
+  double acc_offset_x_, acc_offset_y_, roll_offset_, pitch_offset_;
   WitDriver wd_;
 
   /*********************

@@ -7,6 +7,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
+#include <sensor_msgs/MagneticField.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Float64.h>
 #include <wit_node/ImuGpsRaw.h>
@@ -44,6 +45,7 @@ class WitRos {
    **********************/
   void advertiseTopics(NodeHandle &nh);
   Publisher imu_pub_;
+  Publisher mag_pub_;
   Publisher gps_pub_;
   Publisher raw_data_pub_;
   Publisher related_yaw_pub_;

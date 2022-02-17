@@ -78,7 +78,8 @@ bool WitRos::update() {
 }
 
 void WitRos::advertiseTopics(NodeHandle &nh) {
-  imu_pub_ = nh.advertise<sensor_msgs::Imu>("/imu", 1000);
+  imu_pub_ = nh.advertise<sensor_msgs::Imu>("/imu/data_raw", 10);
+  mag_pub_ = nh.advertise<sensor_msgs::MagneticField>("/imu/mag", 10);
   gps_pub_ = nh.advertise<sensor_msgs::NavSatFix>("/gps", 1000);
   raw_data_pub_ = nh.advertise<wit_node::ImuGpsRaw>("raw_data", 1000);
   related_yaw_pub_ = nh.advertise<std_msgs::Float64>("related_yaw", 1000);
@@ -103,11 +104,14 @@ void WitRos::subscribeCmdVel(const geometry_msgs::Twist msg)
 void WitRos::processStreamData() {
   if (ok()) {
     sensor_msgs::Imu imu_msg;
+    sensor_msgs::MagneticField mag_msg;
     sensor_msgs::NavSatFix gps_msg;
     wit_node::ImuGpsRaw raw_msg;
     std_msgs::Float64 yaw_msg;
     imu_msg.header.frame_id = "wt901_imu";
+    mag_msg.header.frame_id = "wt901_imu";
     imu_msg.header.stamp = ros::Time::now();
+    mag_msg.header.stamp = ros::Time::now();
     gps_msg.header.stamp = ros::Time::now();
     raw_msg.header.stamp = ros::Time::now();
     Data::IMUGPS data = wd_.getData();
@@ -136,6 +140,10 @@ void WitRos::processStreamData() {
 
       imu_msg.orientation = tf::createQuaternionMsgFromRollPitchYaw(
           (-data.rpy[1] + roll_offset_), (-data.rpy[0] + pitch_offset_), data.rpy[2]);
+
+      mag_msg.magnetic_field.x = data.mag[1];
+      mag_msg.magnetic_field.y = data.mag[0];
+      mag_msg.magnetic_field.z = data.mag[2];
     }
 
 
@@ -149,6 +157,11 @@ void WitRos::processStreamData() {
      0.0,     0.00001,  0.0,
      0.0,     0.0,      0.00001};
     imu_msg.linear_acceleration_covariance =
+    {0.01,  0.0,  0.0,
+     0.0,   0.01, 0.0,
+     0.0,   0.0,  0.01};
+
+    mag_msg.magnetic_field_covariance =
     {0.01,  0.0,  0.0,
      0.0,   0.01, 0.0,
      0.0,   0.0,  0.01};
@@ -209,6 +222,7 @@ void WitRos::processStreamData() {
     yaw_msg.data = wd_.getRelatedYaw();
 
     imu_pub_.publish(imu_msg);
+    mag_pub_.publish(mag_msg);
     gps_pub_.publish(gps_msg);
     raw_data_pub_.publish(raw_msg);
     related_yaw_pub_.publish(yaw_msg);

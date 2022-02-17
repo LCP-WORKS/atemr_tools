@@ -98,8 +98,6 @@ void WitRos::subscribeCmdVel(const geometry_msgs::Twist msg)
 {
   if((abs(msg.linear.x) > 0.0) || (abs(msg.angular.z) > 0.0))
     is_moving_ = true;
-  else
-    is_moving_ = false;
 }
 
 void WitRos::processStreamData() {
@@ -192,6 +190,7 @@ void WitRos::processStreamData() {
       raw_msg.mag.push_back(data.mag[i]);
       raw_msg.dop.push_back(data.gpsa[i]);
     }
+    is_moving_ = false;
     for (int i = 0; i < 4; i++) {
       raw_msg.ps.push_back(data.d[i]);
       raw_msg.quarternion.push_back(data.q[i]);
